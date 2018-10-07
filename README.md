@@ -10,9 +10,9 @@ For this package an [Anaconda 3](https://www.anaconda.com/download/) environment
 Two separate packages are also used, [metalearn](https://github.com/byu-dml/metalearn) and [TPOT](https://github.com/EpistasisLab/tpot). Since specific changes are made to these packages, they are separately added to the framework. TPOT however does also use the packages deap, update_checker, tqdm and stopit. These packages have to be installed separately in Python.
 
 To have everything correctly working, first install anaconda 3. Then open anaconda prompt and say the following:
-- conda install numpy scipy scikit-learn pandas
+- conda install numpy scipy scikit-learn pandas<br />
 Next the TPOT additional packages need to be installed:
-- pip install deap update_checker tqdm stopit
+- pip install deap update_checker tqdm stopit<br />
 After this, the framework should be ready for usage.
 
 ## cBioF methods
