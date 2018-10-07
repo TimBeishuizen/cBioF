@@ -1,6 +1,7 @@
-from cBioF.read_csv_dataset import read_csv_dataset as RCD
+from cBioF.missing_value_handling import list_deletion
 
-from builtin_functions.missing_value_handling import impute, list_deletion
+from cBioF.missing_value_handling import impute
+from cBioF.read_csv_dataset import read_csv_dataset as RCD
 
 X, y, features = RCD('HepatitisDataset.csv')
 

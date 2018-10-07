@@ -1,10 +1,9 @@
-from metalearn_extension import Metafeatures
-from cBioF import preprocess_dataset as RDIM
-import pandas as pd
-import numpy as np
-import os
-import json
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+from cBioF import preprocess_dataset as RDIM
+from cBioF.metalearn_extension import Metafeatures
 
 
 def find_dataset_issues(X, y, features, missing_values='Unknown', preprocessing=False, output_categorical=True,

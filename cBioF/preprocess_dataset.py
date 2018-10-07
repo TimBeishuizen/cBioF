@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
+from builtin_functions.feature_selection import wrapper_methods as WM, order_methods as OM
+from builtin_functions.missing_value_handling import list_deletion as LDM
+from builtin_functions.preprocessing import hot_encoding as HE, normalisation as NS
 from sklearn.feature_selection import SelectFwe as SF, f_classif
 
-from builtin_functions.feature_selection import wrapper_methods as WM, order_methods as OM
-from builtin_functions.missing_value_handling import impute, list_deletion as LDM
-from builtin_functions.preprocessing import hot_encoding as HE, normalisation as NS
+from cBioF.missing_value_handling import impute
 
 
 def pandas_preprocess_dataset(dfX, dfy, exploration_results, fs_example=False):

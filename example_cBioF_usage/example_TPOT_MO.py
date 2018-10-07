@@ -1,6 +1,5 @@
+from cBioF.TPOT_extension import TPOTClassifier
 from cBioF.read_csv_dataset import read_csv_dataset as RCD
-
-from TPOT_extension import TPOTClassifier
 
 X, y, features = RCD('MicroOrganismsDataset.csv')
 

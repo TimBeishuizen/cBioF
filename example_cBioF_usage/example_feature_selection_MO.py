@@ -1,12 +1,14 @@
-from cBioF.read_csv_dataset import read_csv_dataset as RCD
-from builtin_functions.feature_selection import wrapper_methods as WM, order_methods as OM, embedded_methods as EM
-from builtin_functions.preprocessing import normalisation as NS
-
-from sklearn.feature_selection import SelectKBest, SelectFromModel, f_classif
-from sklearn.ensemble import RandomForestClassifier
-
 # Warnings are ignored due to cross validation of 20 classes in
 import warnings
+
+from cBioF.feature_selection import order_methods as OM, embedded_methods as EM
+from cBioF.preprocessing import normalisation as NS
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_selection import SelectKBest, f_classif
+
+from cBioF.feature_selection import wrapper_methods as WM
+from cBioF.read_csv_dataset import read_csv_dataset as RCD
+
 warnings.simplefilter('ignore')
 
 X, y, features = RCD('MicroOrganismsDataset.csv')
