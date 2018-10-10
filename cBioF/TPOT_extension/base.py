@@ -236,8 +236,8 @@ class TPOTBase(BaseEstimator):
             Flag indicating whether the TPOT version checker should be disabled.
         feature_selection: bool, optional (default: False)
             Flag indicating whether feature selection should always be added to the result
-        fs_modifier: float, optional (default: 0.0001)
-            Modifier value how the number of features should reduce the score. Only used when feature_selection is True
+        fs_modifier: float, optional (default: None)
+            Modifier value how the number of features should reduce the score. If True, becomes 0.99
 
         Returns
         -------
@@ -276,7 +276,10 @@ class TPOTBase(BaseEstimator):
         # START ADDITIONAL FS code
         # Add feature selection variables, a max pipeline length variable, for change in pipeline lenght included
         self.feature_selection = feature_selection
-        self.fs_modifier = fs_modifier
+        if fs_modifier is True:
+            self.fs_modifier = 0.99
+        else:
+            self.fs_modifier = fs_modifier
         self.max_pipeline_length = 3
         if self.feature_selection: # Change length to two for at most length 3, including fs method and ml method
             self.max_pipeline_length = 2
@@ -471,6 +474,7 @@ class TPOTBase(BaseEstimator):
 
     def _add_operators(self):
         for operator in self.operators:
+            operator_name = str(operator).split('.')[-1][:-2]
             if operator.root:
                 # We need to add rooted primitives twice so that they can
                 # return both an Output_Array (and thus be the root of the tree),
@@ -478,8 +482,9 @@ class TPOTBase(BaseEstimator):
                 p_types = (operator.parameter_types()[0], Output_Array)
                 self._pset.addPrimitive(operator, *p_types)
 
+
             # START ADDITIONAL FS code
-            elif str(operator)[8:-2] in fs_config and self.feature_selection:
+            elif operator_name in fs_config and self.feature_selection:
 
 
                 input_types = [Input_Array] + operator.parameter_types()[0][1:]
@@ -488,7 +493,7 @@ class TPOTBase(BaseEstimator):
                 p_types = (input_types, np.ndarray)
                 self._pset.addPrimitive(operator, *p_types)
 
-            elif str(operator)[8:-2] in order_config and self.feature_selection:
+            elif operator_name in order_config and self.feature_selection:
                 input_types = [Input_Array] + operator.parameter_types()[0][1:]
 
                 # Add for every feature selection algorithm a start with input array, so primitives will start with it

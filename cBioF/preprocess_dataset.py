@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
-from builtin_functions.feature_selection import wrapper_methods as WM, order_methods as OM
-from builtin_functions.missing_value_handling import list_deletion as LDM
-from builtin_functions.preprocessing import hot_encoding as HE, normalisation as NS
+from cBioF.feature_selection import wrapper_methods as WM, order_methods as OM
+from cBioF.missing_value_handling import list_deletion as LDM, value_imputation as impute
+from cBioF.preprocessing import hot_encoding as HE, normalisation as NS
+from cBioF._robustness_methods import robustness_methods
 from sklearn.feature_selection import SelectFwe as SF, f_classif
 
 from cBioF.missing_value_handling import impute
@@ -29,11 +30,14 @@ def pandas_preprocess_dataset(dfX, dfy, exploration_results, fs_example=False):
     :return: The preprocessed dfX and dfy
     """
 
+    # Test if input is according to standards
+    robustness_methods.check_pandas_input(dfX, dfy)
+
     dfX = dfX.replace(np.NaN, '')
 
     X = dfX.values
     y = dfy.cat.codes.values
-    features = list(dfX)
+    features = np.asarray(list(dfX))
 
     X_new, y_new, f_new = preprocess_dataset(X, y, features, exploration_results, fs_example)
 
@@ -65,6 +69,9 @@ def preprocess_dataset(X, y, features, exploration_results, fs_example=False):
     :param fs_example: Whether also an example of feature selection should be done. Default: False
     :return: The preprocessed X, y and features
     """
+
+    # Test the input to be according to the standards
+    robustness_methods.check_input_arrays(X, y, features)
 
     # First change data for missing values
     if exploration_results['mv']:

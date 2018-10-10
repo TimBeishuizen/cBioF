@@ -22,7 +22,7 @@ f_filter = features[filter.get_support()]
 
 # Example Wrapper methods - first ordering than selection
 orderer = OM.FeatureOrderer(score_func=f_classif)
-X_ordered = orderer.fit_transform(X)
+X_ordered = orderer.fit_transform(X, y)
 
 wrapper = WM.ForwardSelector(threshold=0.0001)
 X_wrapper = wrapper.fit_transform(X_ordered, y)

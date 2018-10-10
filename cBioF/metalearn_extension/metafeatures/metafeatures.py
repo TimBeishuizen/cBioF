@@ -61,7 +61,7 @@ class Metafeatures(object):
                 cls._resource_is_target_dependent, cls.IDS
             ))
         else:
-            raise ValueError(f"Unknown group {group}")
+            raise ValueError("Unknown group %s" % group)
 
     def compute(
         self, X: DataFrame, Y: Series = None,
@@ -242,15 +242,15 @@ class Metafeatures(object):
             for col in columns:
                 if col not in column_types:
                     raise ValueError(
-                        f"Column type not specified for column {col}"
+                        "Column type not specified for column %s" %col
                     )
                 col_type = column_types[col]
                 if not col_type in [self.NUMERIC, self.CATEGORICAL]:
                     invalid_column_types[col] = col_type
             if len(invalid_column_types) > 0:
                 raise ValueError(
-                    f"Invalid column types: {invalid_column_types}. Valid types " +
-                    f"include {self.NUMERIC} and {self.CATEGORICAL}."
+                    "Invalid column types:  Valid types " % invalid_column_types +
+                    "include %s and %s." % (self.NUMERIC, self.CATEGORICAL)
                 )
 
     def _validate_metafeature_ids(
@@ -286,7 +286,7 @@ class Metafeatures(object):
                 min_samples = Y.unique().shape[0] * n_folds
                 if sample_shape[0] < min_samples:
                     raise ValueError(
-                        f"Cannot sample less than {min_samples} rows from Y"
+                        "Cannot sample less than %i rows from Y" % min_samples
                     )
 
     def _validate_n_folds(
@@ -294,9 +294,9 @@ class Metafeatures(object):
         verbose
     ):
         if not dtype_is_numeric(type(n_folds)) or (n_folds != int(n_folds)):
-            raise ValueError(f"`n_folds` must be an integer, not {n_folds}")
+            raise ValueError("`n_folds` must be an integer, not %s" %n_folds)
         if n_folds < 2:
-            raise ValueError(f"`n_folds` must be >= 2, but was {n_folds}")
+            raise ValueError("`n_folds` must be >= 2, but was %.2f " % n_folds)
         if not Y is None and metafeature_ids is not None:
             # when computing landmarking metafeatures, there must be at least
             # n_folds instances of each class of Y
@@ -309,8 +309,8 @@ class Metafeatures(object):
                     if group.shape[0] < n_folds:
                         raise ValueError(
                             "The minimum number of instances in each class of" +
-                            f" Y is n_folds={n_folds}. Class {group_id} has " +
-                            f"{group.shape[0]}."
+                            " Y is n_folds=%i. Class %s has " % (n_folds, group_id) +
+                            "%i." % group.shape[0]
                         )
 
     def _validate_verbose(

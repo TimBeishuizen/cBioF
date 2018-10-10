@@ -24,19 +24,19 @@ License along with TPOT. If not, see <http://www.gnu.org/licenses/>.
 """
 
 # All feature selection tools
-fs_config = ['TPOT_extension.operator_utils.TPOT_RFE',
-             'TPOT_extension.operator_utils.TPOT_SelectFromModel',
-             'TPOT_extension.operator_utils.TPOT_SelectFwe',
-             'TPOT_extension.operator_utils.TPOT_SelectPercentile',
-             'TPOT_extension.operator_utils.TPOT_VarianceThreshold',
-             'TPOT_extension.operator_utils.TPOT_SelectKBest',
-             'TPOT_extension.operator_utils.TPOT_SelectKFromModel',
-             'TPOT_extension.operator_utils.TPOT_ForwardSelector',
-             'TPOT_extension.operator_utils.TPOT_PTA',
-             'TPOT_extension.operator_utils.TPOT_FloatingSelector',
+fs_config = ['TPOT_RFE',
+             'TPOT_SelectFromModel',
+             'TPOT_SelectFwe',
+             'TPOT_SelectPercentile',
+             'TPOT_VarianceThreshold',
+             'TPOT_SelectKBest',
+             'TPOT_SelectKFromModel',
+             'TPOT_ForwardSelector',
+             'TPOT_PTA',
+             'TPOT_FloatingSelector',
              ]
 
-order_config = ['TPOT_extension.operator_utils.TPOT_FeatureOrderer']
+order_config = ['TPOT_FeatureOrderer']
 
 fs_pipeline_steps = ['rfe',
              'selectfrommodel',

@@ -1,12 +1,15 @@
+import matplotlib
+matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 from cBioF import preprocess_dataset as RDIM
 from cBioF.metalearn_extension import Metafeatures
+from cBioF._robustness_methods import robustness_methods
 
 
-def find_dataset_issues(X, y, features, missing_values='Unknown', preprocessing=False, output_categorical=True,
+def explore_dataset(X, y, features, missing_values='Unknown', preprocessing=False, output_categorical=True,
                         focus=False, plots=False):
     """ First prepare the data for data exploration. Then find issues in the dataset. These issues are based on:
      - feature types, 
@@ -35,9 +38,12 @@ def find_dataset_issues(X, y, features, missing_values='Unknown', preprocessing=
     :return: if: preprocessing = True: preprocessed X, y and features
     """
 
+    # Test the input to be according to the standards
+    robustness_methods.check_input_arrays(X, y, features)
+
     dfX, dfy = _create_pandas_dataframe_dataset(X, y, features, output_categorical=output_categorical)
 
-    dfX, dfy, exploration_results = pandas_find_dataset_issues(dfX, dfy, missing_values=missing_values,
+    dfX, dfy, exploration_results = pandas_explore_dataset(dfX, dfy, missing_values=missing_values,
                                                                preprocessing=preprocessing, focus=focus,
                                                                plots=plots)
     X_new = dfX.values
@@ -47,7 +53,7 @@ def find_dataset_issues(X, y, features, missing_values='Unknown', preprocessing=
     return X_new, y_new, f_new, exploration_results
 
 
-def pandas_find_dataset_issues(dfX, dfy, missing_values='Unknown', preprocessing=False, focus=False, plots=False):
+def pandas_explore_dataset(dfX, dfy, missing_values='Unknown', preprocessing=False, focus=False, plots=False):
     """ First prepare the data for data exploration. Then find issues in the dataset. These issues are based on:
      - feature types, 
      - feature dimensionality, 
@@ -72,9 +78,12 @@ def pandas_find_dataset_issues(dfX, dfy, missing_values='Unknown', preprocessing
     :return: if: preprocessing = True: preprocessed dfX and dfy
     """
 
+    # Test the input to be according to the standards
+    robustness_methods.check_pandas_input(dfX, dfy)
+
     dfX = _prepare_dataset(dfX, missing_values=missing_values)
 
-    exploration_results = _pandas_explore_dataset(dfX, dfy, plots=plots, focus=focus)
+    exploration_results = _pandas_metalearn_explore_dataset(dfX, dfy, plots=plots, focus=focus)
 
     # If preprocessing is needed
     if preprocessing:
@@ -84,7 +93,7 @@ def pandas_find_dataset_issues(dfX, dfy, missing_values='Unknown', preprocessing
         return dfX_new, dfy_new, exploration_results
 
 
-def _pandas_explore_dataset(dfX, dfy, focus=False, plots=False):
+def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
     """ TFind issues in the dataset. These issues are based on:
      - feature types, 
      - feature dimensionality, 
@@ -105,6 +114,9 @@ def _pandas_explore_dataset(dfX, dfy, focus=False, plots=False):
     :return: if: preprocessing = True: preprocessed dfX and dfy
     """
 
+    # Test the input to be according to the standards
+    robustness_methods.check_pandas_input(dfX, dfy)
+
     mf = Metafeatures()
     metafeatures = mf.compute(dfX, dfy)
 
@@ -114,7 +126,6 @@ def _pandas_explore_dataset(dfX, dfy, focus=False, plots=False):
     exploration_results['num'] = False
 
     # Feature types
-
     if metafeatures['NumberOfCategoricalFeatures']['value'] > 0:
         print("\n \033[94m Feature Types\033[0m")
         exploration_results['cat'] = True
