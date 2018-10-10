@@ -3,7 +3,7 @@ import pandas as pd
 from cBioF.feature_selection import wrapper_methods as WM, order_methods as OM
 from cBioF.missing_value_handling import list_deletion as LDM, value_imputation as impute
 from cBioF.preprocessing import hot_encoding as HE, normalisation as NS
-from cBioF._robustness_methods import robustness_methods
+from cBioF.robustness_methods import robustness_methods
 from sklearn.feature_selection import SelectFwe as SF, f_classif
 
 from cBioF.missing_value_handling import impute

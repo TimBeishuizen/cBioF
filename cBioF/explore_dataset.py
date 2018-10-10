@@ -6,7 +6,7 @@ import pandas as pd
 
 from cBioF import preprocess_dataset as RDIM
 from cBioF.metalearn_extension import Metafeatures
-from cBioF._robustness_methods import robustness_methods
+from cBioF.robustness_methods import robustness_methods
 
 
 def explore_dataset(X, y, features, missing_values='Unknown', preprocessing=False, output_categorical=True,

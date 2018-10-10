@@ -1,6 +1,6 @@
 import cBioF.TPOT_extension as TPOT
 from cBioF.explore_dataset import explore_dataset
-from cBioF._robustness_methods import robustness_methods
+from cBioF.robustness_methods import robustness_methods
 
 
 def analyse_dataset(X, y, features, file_name='Pipeline', preprocessing=False, feature_selection=False, classification=True):
