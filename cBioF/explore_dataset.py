@@ -9,7 +9,7 @@ from cBioF.metalearn_extension import Metafeatures
 from cBioF.robustness_methods import robustness_methods
 
 
-def explore_dataset(X, y, features, missing_values='Unknown', preprocessing=False, output_categorical=True,
+def explore_dataset(X, y, features, missing_values='Unknown', preprocessing=False, classification=True,
                         focus=False, plots=False):
     """ First prepare the data for data exploration. Then find issues in the dataset. These issues are based on:
      - feature types, 
@@ -32,7 +32,7 @@ def explore_dataset(X, y, features, missing_values='Unknown', preprocessing=Fals
     :param missing_values: The way missing values are added to the data. Can be a list if missing values are portrayed 
     in multiple ways. Default: 'Unknown' (several well-known ways of portraying missing values are checked)
     :param preprocessing: Whether preprocessing should be done after exploration
-    :param output_categorical: If the output is categorical. Default: True
+    :param classification: If the output is categorical. Default: True
     :param focus: Whether focus is desired on outliers to get a better insight in the data. Default: False
     :param plots: Whether plots should be shown to get a better insight in the data. Default: False
     :return: if: preprocessing = True: preprocessed X, y and features
@@ -41,7 +41,7 @@ def explore_dataset(X, y, features, missing_values='Unknown', preprocessing=Fals
     # Test the input to be according to the standards
     robustness_methods.check_input_arrays(X, y, features)
 
-    dfX, dfy = _create_pandas_dataframe_dataset(X, y, features, output_categorical=output_categorical)
+    dfX, dfy = _create_pandas_dataframe_dataset(X, y, features, classification=classification)
 
     dfX, dfy, exploration_results = pandas_explore_dataset(dfX, dfy, missing_values=missing_values,
                                                                preprocessing=preprocessing, focus=focus,
@@ -311,7 +311,7 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
     return exploration_results
 
 
-def _create_pandas_dataframe_dataset(X, y, features, output_categorical=True):
+def _create_pandas_dataframe_dataset(X, y, features, classification=True):
     """ Make a pandas dataframe out of the numpy dataset
 
     :param X: A numpy matrix of the data. First axis corresponding to instances, second axis corresponding to samples
@@ -319,14 +319,14 @@ def _create_pandas_dataframe_dataset(X, y, features, output_categorical=True):
     axis of X
     :param features: A numpy array of the feature names. The length of the array should correspond to the size of the 
     second axis of X
-    :param output_categorical: If the output is categorical. Default: True
+    :param classification: If the output is categorical. Default: True
     :return: dataframe dfX with data and series dfy with output
     """
 
     # Create dataframe
     dfX = pd.DataFrame(X, columns=features)
 
-    if output_categorical:
+    if classification:
         dfy = pd.Series(y, dtype='category')
     else:
         dfy = pd.Series(y, dtype=float)

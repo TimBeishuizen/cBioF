@@ -28,7 +28,7 @@ def analyse_dataset(X, y, features, file_name='Pipeline', preprocessing=False, f
     # First preprocessing
     if preprocessing and classification:
         print("Preprocessing the data...")
-        X, y, f, exploration_results = explore_dataset(X, y, features, preprocessing=True)
+        X, y, f, exploration_results = explore_dataset(X, y, features, preprocessing=True, classification=classification)
 
         feature_selection = exploration_results['fs']
 
