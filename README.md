@@ -23,7 +23,7 @@ After this, the framework should be ready for usage.
 Since the package itself is not possible to install yet, two different ways of using it are available. The first one is by working directly in the main directory of this cBioF framework. In this main directory only the python line `import cBioF` is enough to use the automated csv reading, exploration and analysis methods. Another option is to work in a separate directory. This directory can then be imported with the following python lines:
 ```\
 import sys
-sys.path.append((r"YOURPATH\cBioF")
+sys.path.append(r"YOURPATH\cBioF")
 import cBioF
 ```
 
