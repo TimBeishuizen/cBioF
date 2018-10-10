@@ -5,7 +5,7 @@ The computational Biology Framework for initial data analysis
 Biomedical Engineers benefit from help at the start of their data analysis. This package provides such help, by helping it with exploration, preprocessing and initial analysis. All of these processes help guiding the biomedical engineer in the direction he should go with its data analysis.
 
 ## Installation
-For this package an [Anaconda](https://www.anaconda.com/download/) environment is advised, using [Python](https://www.python.org/downloads/) version 3 and the available packages *numpy*, *scipy*, *scikit-learn* and *pandas* that are available in Anaconda.
+For this package an [Anaconda](https://www.anaconda.com/download/) environment is required, using [Python](https://www.python.org/downloads/) version 3 and the available packages *numpy*, *scipy*, *scikit-learn* and *pandas* that are available in Anaconda.
 
 Two separate packages are also used, [metalearn](https://github.com/byu-dml/metalearn) and [TPOT](https://github.com/EpistasisLab/tpot). Since specific changes are made to these packages, they are separately added to the framework and do not need to be installed. TPOT however does also use the packages *deap*, *update_checker*, *tqdm* and *stopit*. These packages have to be installed separately in Python.
 
