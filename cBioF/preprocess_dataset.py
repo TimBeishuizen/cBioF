@@ -4,7 +4,7 @@ from cBioF.feature_selection import wrapper_methods as WM, order_methods as OM
 from cBioF.missing_value_handling import list_deletion as LDM, value_imputation as impute
 from cBioF.preprocessing import hot_encoding as HE, normalisation as NS
 from cBioF.robustness_methods import robustness_methods
-from sklearn.feature_selection import SelectFwe as SF, f_classif
+from sklearn.feature_selection import SelectFwe as SF, f_classif, SelectKBest
 
 from cBioF.missing_value_handling import impute
 
@@ -117,9 +117,9 @@ def preprocess_dataset(X, y, features, exploration_results, fs_example=False):
     if exploration_results['fs'] and fs_example:
         print("\nDoing an example of feature selection...")
         # Feature selection if multicollinearity
-        if exploration_results['mc'] and False:
+        if exploration_results['mc']:
             # Remove multicollinearity
-            feature_selector = WM.ForwardSelector(threshold=0.001)
+            feature_selector = WM.ForwardSelector(threshold=0.0001)
 
             # Order to have more relevant features first
             feature_orderer = OM.FeatureOrderer(f_classif)
@@ -132,13 +132,17 @@ def preprocess_dataset(X, y, features, exploration_results, fs_example=False):
         X = feature_selector.fit_transform(X, y)
         old_features = np.copy(features)
         features = features[feature_selector.get_support()]
+
+        # Remove extra features as only 200 are needed.
+        if features.shape[0] > 200:
+            print("Extra feature selection is done to reduce the number of features to 200...")
+            extra_feature_selector = SelectKBest(f_classif, k=200)
+            X = extra_feature_selector.fit_transform(X, y)
+            features = features[feature_selector.get_support()]
+
         removed_features = _return_removed_features(features, old_features)
 
         print("These features are removed due to feature selection: %s" % removed_features)
-
-    # if exploration_results['imbalance']:
-    #     print("Try to use F1-score over Accuracy in quality measurements")
-    #     # F1 score
 
     return X, y, features
 

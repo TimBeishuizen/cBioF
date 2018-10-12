@@ -35,11 +35,18 @@ def analyse_dataset(X, y, features, file_name='Pipeline', preprocessing=False, f
         if exploration_results['imbalance']:
             scoring = 'f1'
 
+    high_nr_features = None
+
+    # Number of features makes a difference for the type of feature selection TPOT
+    if features.shape[0] > 20000:
+        high_nr_features = "TPOT FS"
+
     # Then analysis with automated machine learning
     if classification:
         if feature_selection:
             tpot = TPOT.TPOTClassifier(population_size=20, generations=5, scoring=scoring,
-                                       feature_selection=feature_selection, fs_modifier=True)
+                                       feature_selection=feature_selection, fs_modifier=True,
+                                       config_dict=high_nr_features)
         else:
             tpot = TPOT.TPOTClassifier(population_size=20, generations=5, scoring=scoring)
     else:
