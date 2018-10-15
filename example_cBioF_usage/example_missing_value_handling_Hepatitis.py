@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]), 'example_cBioF_usage')) # Quick way to add parent directory
+
 from cBioF.missing_value_handling import list_deletion
 
 from cBioF.missing_value_handling import impute

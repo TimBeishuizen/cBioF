@@ -3,7 +3,7 @@ from cBioF.explore_dataset import explore_dataset
 from cBioF.robustness_methods import robustness_methods
 
 
-def analyse_dataset(X, y, features, file_name='Pipeline', preprocessing=False, feature_selection=False, classification=True):
+def analyse_dataset(X, y, features, file_name=None, preprocessing=False, feature_selection=False, classification=True):
     """ Analyses the dataset and exports  a file with the combination of analysis and preprocessing techniques that give
     the best results. Preprocessing can be done before analysis to prepare the dataset if needed. If not preprocessing
     is done, the data is assumed to be numeric.
@@ -44,7 +44,7 @@ def analyse_dataset(X, y, features, file_name='Pipeline', preprocessing=False, f
     # Then analysis with automated machine learning
     if classification:
         if feature_selection:
-            tpot = TPOT.TPOTClassifier(population_size=20, generations=5, scoring=scoring,
+            tpot = TPOT.TPOTClassifier(population_size=5, generations=1, scoring=scoring,
                                        feature_selection=feature_selection, fs_modifier=True,
                                        config_dict=high_nr_features)
         else:
@@ -52,10 +52,16 @@ def analyse_dataset(X, y, features, file_name='Pipeline', preprocessing=False, f
     else:
         tpot = TPOT.TPOTRegressor(population_size=20, generations=5, scoring=scoring)
 
+    print(X.shape)
+    print(y.shape)
+
     print("Using TPOT to find the best pipeline...")
     tpot.fit(X, y)
 
-    # Export pipeline
-    print('Exporting as %s.py' % file_name)
-    tpot.export('%s.py' % file_name)
+    if not (file_name is None or file_name == 'No output file'):
+        # Export pipeline
+        print('Exporting as %s.py' % file_name)
+        tpot.export('%s.py' % file_name)
+
+    return tpot._optimized_pipeline
 

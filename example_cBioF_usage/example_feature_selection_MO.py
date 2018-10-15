@@ -1,6 +1,10 @@
 # Warnings are ignored due to cross validation of 20 classes in
 import warnings
 
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]), 'example_cBioF_usage')) # Quick way to add parent directory
+
 from cBioF.feature_selection import order_methods as OM, embedded_methods as EM
 from cBioF.preprocessing import normalisation as NS
 from sklearn.ensemble import RandomForestClassifier

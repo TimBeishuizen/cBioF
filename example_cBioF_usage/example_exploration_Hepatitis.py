@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]), 'example_cBioF_usage')) # Quick way to add parent directory
+
 import cBioF
 
 # Read the csv file. File should be a matrix with: 1st row = features, last column = output values. Input should be the path and name of a csv file

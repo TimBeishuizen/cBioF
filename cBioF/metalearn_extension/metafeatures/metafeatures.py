@@ -66,7 +66,7 @@ class Metafeatures(object):
     def compute(
         self, X: DataFrame, Y: Series = None,
         column_types: Dict[str, str] = None, metafeature_ids: List = None,
-        sample_shape=None, seed=None, n_folds=2, verbose=False, plots=False
+        sample_shape=None, seed=None, n_folds=2, verbose=False, plots=False, classif=False
     ) -> dict:
         """
         Parameters
@@ -88,6 +88,7 @@ class Metafeatures(object):
         verbose: bool, default False. When True, prints the ID of each
             metafeature right before it is about to be computed.
         plots: bool, default False. When True will show plots of the desired metafeatures
+        classif: bool, default True. When False removes landmarking due to not being possible
 
         Returns
         -------
@@ -139,7 +140,7 @@ class Metafeatures(object):
                 }
             except Exception as e:
                 print("%s caused in process %s" %(e, metafeature_id))
-                continue
+                #continue
 
         # START ADDITIONAL EXPLORATION code
         if plots:

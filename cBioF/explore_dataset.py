@@ -9,6 +9,26 @@ from cBioF.metalearn_extension import Metafeatures
 from cBioF.robustness_methods import robustness_methods
 
 
+basic_mf = ['NumberOfCategoricalFeatures', 'NumberOfNumericFeatures', 'Dimensionality', 'NumberOfMissingValues',
+            'RatioOfFeaturesWithMissingValues', 'RatioOfInstancesWithMissingValues',
+            'MinCardinalityOfCategoricalFeatures', 'MinCardinalityOfNumericFeatures',
+            'MinimumCardinalityFeaturesCount', 'MinimumCardinalityFeatures', 'MeanMeansOfNumericFeatures',
+            'StdevMeansOfNumericFeatures', 'MeanStdDevOfNumericFeatures', 'StdevStdDevOfNumericFeatures',
+            'MeanSkewnessOfNumericFeatures', 'MeanKurtosisOfNumericFeatures', 'NumberOfFeatures',
+            'MeanCorrelation', 'MaxCorrelation', 'MinCorrelation']
+
+classif_mf = ['MinClassProbability', 'NumberOfClasses', 'MaxClassProbability', 'MinCategoricalMutualInformation',
+              'MinNumericMutualInformation', 'PredPCA1', 'PredPCA2', 'PredPCA3']
+
+focus_mf = ['CategoricalMutualInformationOutlierFeatures', 'NumericMutualInformationOutlierFeatures',
+            'FeaturesWithMostMissingValues', 'RatioOfFeaturesWithMostMissingValues', 'OutlierClassProbabilities',
+            'OutlierClasses', 'CorrelationOutlierFeatures', 'CorrelationOutliers']
+
+plot_mf = ["ClassHistogram", "DistributionBoxplots", "CategoricalCardinalityOutlierHistograms",
+           "NumericCardinalityOutlierBoxplots", "CategoricalMutualInformationOutlierHistograms",
+           "NumericMutualInformationOutlierHistograms"]
+
+
 def explore_dataset(X, y, features, missing_values='Unknown', preprocessing=False, classification=True,
                         focus=False, plots=False):
     """ First prepare the data for data exploration. Then find issues in the dataset. These issues are based on:
@@ -45,15 +65,15 @@ def explore_dataset(X, y, features, missing_values='Unknown', preprocessing=Fals
 
     dfX, dfy, exploration_results = pandas_explore_dataset(dfX, dfy, missing_values=missing_values,
                                                                preprocessing=preprocessing, focus=focus,
-                                                               plots=plots)
+                                                               plots=plots, classification=classification)
     X_new = dfX.values
     y_new = dfy.values
-    f_new = list(dfX)
+    f_new = np.array(list(dfX))
 
     return X_new, y_new, f_new, exploration_results
 
 
-def pandas_explore_dataset(dfX, dfy, missing_values='Unknown', preprocessing=False, focus=False, plots=False):
+def pandas_explore_dataset(dfX, dfy, missing_values='Unknown', preprocessing=False, focus=False, plots=False, classification=True):
     """ First prepare the data for data exploration. Then find issues in the dataset. These issues are based on:
      - feature types, 
      - feature dimensionality, 
@@ -75,6 +95,7 @@ def pandas_explore_dataset(dfX, dfy, missing_values='Unknown', preprocessing=Fal
     :param preprocessing: Whether preprocessing should be done after exploration
     :param focus: Whether focus is desired on outliers to get a better insight in the data. Default: False
     :param plots: Whether plots should be shown to get a better insight in the data. Default: False
+    :param classification: If the output is categorical. Default: True
     :return: if: preprocessing = True: preprocessed dfX and dfy
     """
 
@@ -83,17 +104,17 @@ def pandas_explore_dataset(dfX, dfy, missing_values='Unknown', preprocessing=Fal
 
     dfX = _prepare_dataset(dfX, missing_values=missing_values)
 
-    exploration_results = _pandas_metalearn_explore_dataset(dfX, dfy, plots=plots, focus=focus)
+    exploration_results = _pandas_metalearn_explore_dataset(dfX, dfy, plots=plots, focus=focus, classification=classification)
 
     # If preprocessing is needed
     if preprocessing:
-        print("\n \033[94m Preprocessing \033[m")
-        dfX_new, dfy_new = RDIM.pandas_preprocess_dataset(dfX, dfy, exploration_results, fs_example=True)
+        print("\n  Preprocessing")
+        dfX_new, dfy_new = RDIM.pandas_preprocess_dataset(dfX, dfy, exploration_results, fs_example=True, classification=classification)
 
         return dfX_new, dfy_new, exploration_results
 
 
-def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
+def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False, classification=True):
     """ TFind issues in the dataset. These issues are based on:
      - feature types, 
      - feature dimensionality, 
@@ -111,6 +132,7 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
     axis of X
     :param focus: Whether focus is desired on outliers to get a better insight in the data. Default: False
     :param plots: Whether plots should be shown to get a better insight in the data. Default: False
+    :param classification: If the output is categorical. Default: True
     :return: if: preprocessing = True: preprocessed dfX and dfy
     """
 
@@ -118,7 +140,19 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
     robustness_methods.check_pandas_input(dfX, dfy)
 
     mf = Metafeatures()
-    metafeatures = mf.compute(dfX, dfy)
+
+    list_mfs = basic_mf
+
+    if classification:
+        list_mfs.extend(classif_mf)
+
+    if focus:
+        list_mfs.extend(focus_mf)
+
+    if plots:
+        list_mfs.extend(plot_mf)
+
+    metafeatures = mf.compute(dfX, dfy, metafeature_ids=list_mfs)
 
 
     exploration_results = {}
@@ -127,7 +161,7 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
 
     # Feature types
     if metafeatures['NumberOfCategoricalFeatures']['value'] > 0:
-        print("\n \033[94m Feature Types\033[0m")
+        print("\n Feature Types")
         exploration_results['cat'] = True
         print("%i categorical features are present, hot encoding is recommended for machine learning analysis"
               % metafeatures['NumberOfCategoricalFeatures']['value'])
@@ -144,7 +178,7 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
     exploration_results['fs'] = False
 
     if metafeatures['Dimensionality']['value'] > 1:
-        print("\n \033[94m Feature Dimensionality\033[m")
+        print("\n Feature Dimensionality")
         exploration_results['fs'] = True
         print("Dimensionality is higher than 1: %.2f, feature selection is recommended"
               % metafeatures['Dimensionality']['value'])
@@ -152,7 +186,7 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
     min_mi = min(metafeatures['MinCategoricalMutualInformation']['value'],
                  metafeatures['MinNumericMutualInformation']['value'])
 
-    if min_mi < 0.01:
+    if classification and min_mi < 0.01:
         exploration_results['fs'] = True
         print("The mutual information of at least one feature is lower than 0.05: %.2f. "
               "Feature selection is recommended" % min_mi)
@@ -177,7 +211,7 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
 
     # Missing values
     if metafeatures['NumberOfMissingValues']['value'] > 0:
-        print("\n \033[94m Missing Values \033[0m")
+        print("\n Missing Values")
         exploration_results['mv'] = True
         print("%i missing values are present, missing value handling should occur"
               % metafeatures['NumberOfMissingValues']['value'])
@@ -201,9 +235,9 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
     exploration_results['imbalance'] = False
 
     # Output imbalance
-    if metafeatures['MinClassProbability']['value'] + 0.10 / metafeatures['NumberOfClasses']['value'] \
+    if classification and metafeatures['MinClassProbability']['value'] + 0.10 / metafeatures['NumberOfClasses']['value'] \
             < metafeatures['MaxClassProbability']['value']:
-        print("\n \033[94m Output imbalance \033[0m")
+        print("\n Output imbalance")
         exploration_results['imbalance'] = True
         print(
             "Minority class probability is %.2f smaller than the majority class probability. Imbalance seems present,"
@@ -223,7 +257,7 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
     # Irrelevant features
     if metafeatures['MinCardinalityOfCategoricalFeatures']['value'] == 1 or \
                     metafeatures['MinCardinalityOfNumericFeatures']['value'] == 1:
-        print("\n \033[94m Irrelevant Features \033[0m")
+        print("\n Irrelevant Features")
         exploration_results['irrelevance'] = metafeatures['MinimumCardinalityFeaturesCount']['value']
         print("%i features without any information are present" % metafeatures['MinimumCardinalityFeaturesCount'][
             'value'])
@@ -235,7 +269,7 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
                   list(dfX)[metafeatures['MinimumCardinalityFeatures']['value']].tolist())
 
     # Normalisation
-    print("\n \033[94m Normalisation \033[m")
+    print("\n Normalisation")
 
     exploration_results['norm_means'] = False
     exploration_results['norm_stdev'] = False
@@ -266,22 +300,22 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False):
         exploration_results['stand'] = True
 
     # Multicollinearity
-    print("\n \033[94m Multicollinearity \033[0m")
+    print("\n Multicollinearity")
     mc_threshold = 1 / ((metafeatures['NumberOfFeatures']['value']) ** (1 / 2))
 
     exploration_results['mc'] = False
 
-    if metafeatures['PredPCA1']['value'] > mc_threshold:
+    if classification and metafeatures['PredPCA1']['value'] > mc_threshold:
         print('The first principal component already explains %.2f variance in the dataset, showing a high amount of '
               'multicollinearity being present' % metafeatures['PredPCA1']['value'])
         exploration_results['mc'] = True
-    elif metafeatures['PredPCA1']['value'] + metafeatures['PredPCA2']['value'] > mc_threshold:
+    elif classification and metafeatures['PredPCA1']['value'] + metafeatures['PredPCA2']['value'] > mc_threshold:
         print(
             'The first two principal component already explain %.2f variance in the dataset, showing a high amount of '
             'multicollinearity being present' %
             metafeatures['PredPCA1']['value'] + metafeatures['PredPCA2']['value'])
         exploration_results['mc'] = True
-    elif metafeatures['PredPCA1']['value'] + metafeatures['PredPCA2']['value'] + metafeatures['PredPCA3'][
+    elif classification and metafeatures['PredPCA1']['value'] + metafeatures['PredPCA2']['value'] + metafeatures['PredPCA3'][
         'value'] > mc_threshold:
         print(
             'The first three principal component already contain %.2f variance in the dataset, showing a high amount of '
@@ -392,7 +426,5 @@ def _prepare_data_types(dfX):
             dfX[header] = dfX[header].astype('category')
 
     return dfX
-
-
 
 

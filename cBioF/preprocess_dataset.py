@@ -9,7 +9,7 @@ from sklearn.feature_selection import SelectFwe as SF, f_classif, SelectKBest
 from cBioF.missing_value_handling import impute
 
 
-def pandas_preprocess_dataset(dfX, dfy, exploration_results, fs_example=False):
+def pandas_preprocess_dataset(dfX, dfy, exploration_results, fs_example=False, classification=True):
     """ Preprocess the data according to earlier performed exploration results with found issues. These issues are based on:
      - feature types,
      - feature dimensionality,
@@ -27,6 +27,7 @@ def pandas_preprocess_dataset(dfX, dfy, exploration_results, fs_example=False):
     :param exploration_results: A dict with the results of the earlier exploration, corresponding to the aforementioned
     issues
     :param fs_example: Whether also an example of feature selection should be done. Default: False
+    :param classification: If the output is categorical. Default: True
     :return: The preprocessed dfX and dfy
     """
 
@@ -36,7 +37,12 @@ def pandas_preprocess_dataset(dfX, dfy, exploration_results, fs_example=False):
     dfX = dfX.replace(np.NaN, '')
 
     X = dfX.values
-    y = dfy.cat.codes.values
+
+    if classification:
+        y = dfy.cat.codes.values
+    else:
+        y = dfy.values
+
     features = np.asarray(list(dfX))
 
     X_new, y_new, f_new = preprocess_dataset(X, y, features, exploration_results, fs_example)
