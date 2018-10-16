@@ -86,7 +86,13 @@ cBioF.analyse_dataset(X, y, features, file_name='TPOT_pipeline_MO', preprocessin
 ```
 
 ## GUI
-The GUI makes use of the four cBioF methods made available: `read_csv_dataset`, `explore_dataset`, `analyse_dataset` and `export_csv_dataset`. For all of these important input variables can be changed by the user. Progress can be tracked by reading the terminal provided in the window. Two example screens are given in the user manual, for better clarification. 
+The GUI makes use of the four cBioF methods made available: `read_csv_dataset`, `explore_dataset`, `analyse_dataset` and `export_csv_dataset`. For all of these important input variables can be changed by the user. Progress can be tracked by reading the terminal provided in the window. Two screenshots:
+
+- The starting screen of the GUI
+![alt text](https://github.com/TimBeishuizen/cBioF/blob/master/GUI_pictures/example_GUI.PNG "Starting screen cBioF GUI")
+
+- The GUI doing exploration and preprocessing of a dataset
+![alt text](https://github.com/TimBeishuizen/cBioF/blob/master/GUI_pictures/example_GUI_2.PNG "Usage GUI")
 
 ## Builtin functions
 Aside from the exploration and preprocessing, several methods are also given separately. These methods are made when the user has a better idea how to approach the dataset and preprocess it. These methods are mainly created due to limitations in the *scikit-learn* package and alternatives usually can be found in there. The builtin functions are based on feature selection, missing value handling and basic preprocessing. All of them need numpy matrices or arrays as input, either from the data matrix, the output array or the feature array. Explaining every single method and parameter is done in the code. An explanation of a method `TARGET_METHOD` can be retrieved by putting the line `help(TARGET_METHOD)` in Python after importing it.
