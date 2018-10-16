@@ -26,8 +26,8 @@ Since the package itself is not possible to install yet, three different ways of
 cd YOURPATH\cBiof
 python GUI_cBioF.py
 ```
-- The second one is by working directly in the main directory of this cBioF framework. In this main directory only the python line `import cBioF` is enough to use the automated csv reading, exploration and analysis methods. 
-- The third option is to work in a separate directory. This directory can then be imported with the following python lines:
+- The second way is done by using a python interpreter, by working directly in the main directory of this cBioF framework. In this main directory only the line `import cBioF` in a python file is enough to gain access to the initial cBioF methods. 
+- The third option is to work in a python file in a separate directory. This directory can then be imported with the following python lines:
 ```\
 import sys
 sys.path.append(r"YOURPATH\cBioF")
