@@ -15,10 +15,10 @@ basic_mf = ['NumberOfCategoricalFeatures', 'NumberOfNumericFeatures', 'Dimension
             'MinimumCardinalityFeaturesCount', 'MinimumCardinalityFeatures', 'MeanMeansOfNumericFeatures',
             'StdevMeansOfNumericFeatures', 'MeanStdDevOfNumericFeatures', 'StdevStdDevOfNumericFeatures',
             'MeanSkewnessOfNumericFeatures', 'MeanKurtosisOfNumericFeatures', 'NumberOfFeatures',
-            'MeanCorrelation', 'MaxCorrelation', 'MinCorrelation']
+            'MeanCorrelation', 'MaxCorrelation', 'MinCorrelation', 'MinCategoricalMutualInformation',
+              'MinNumericMutualInformation']
 
-classif_mf = ['MinClassProbability', 'NumberOfClasses', 'MaxClassProbability', 'MinCategoricalMutualInformation',
-              'MinNumericMutualInformation', 'PredPCA1', 'PredPCA2', 'PredPCA3']
+classif_mf = ['MinClassProbability', 'NumberOfClasses', 'MaxClassProbability', 'PredPCA1', 'PredPCA2', 'PredPCA3']
 
 focus_mf = ['CategoricalMutualInformationOutlierFeatures', 'NumericMutualInformationOutlierFeatures',
             'FeaturesWithMostMissingValues', 'RatioOfFeaturesWithMostMissingValues', 'OutlierClassProbabilities',
@@ -223,7 +223,7 @@ def _pandas_metalearn_explore_dataset(dfX, dfy, focus=False, plots=False, classi
         if metafeatures['RatioOfFeaturesWithMissingValues']['value'] > 0.10:
             print("The ratio of features with missing values is not small %.2f, "
                   "only available case analysis is not advised"
-                  % metafeatures['RatioOfInstancesWithMissingValues']['value'])
+                  % metafeatures['RatioOfFeaturesWithMissingValues']['value'])
             exploration_results['aca'] = False
 
         if focus:
