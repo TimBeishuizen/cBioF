@@ -20,7 +20,14 @@ pip install deap update_checker tqdm stopit
 Also, for windows users the package *pywin32* is needed. This is automatically installed when using Anaconda.
 
 ## Usage
-Since the package itself is not possible to install yet, two different ways of using it are available. The first one is by working directly in the main directory of this cBioF framework. In this main directory only the python line `import cBioF` is enough to use the automated csv reading, exploration and analysis methods. Another option is to work in a separate directory. This directory can then be imported with the following python lines:
+Since the package itself is not possible to install yet, three different ways of using it are available:
+- The first option only involves a simple GUI made for easy access of the most basic methods in the cBioF framework (discussed in the section GUI). This GUI can be started with a command prompt, by first going to the directory of the cBioF framework and then calling the file `GUI_cBioF.py` with python (using python 3 as standard version):
+```
+cd YOURPATH\cBiof
+python GUI_cBioF.py
+```
+- The second one is by working directly in the main directory of this cBioF framework. In this main directory only the python line `import cBioF` is enough to use the automated csv reading, exploration and analysis methods. 
+- The third option is to work in a separate directory. This directory can then be imported with the following python lines:
 ```\
 import sys
 sys.path.append(r"YOURPATH\cBioF")
@@ -39,9 +46,9 @@ cBioF has some initial methods. These methods are based on reading in a data csv
 - normalisation
 - multicollinearity
 
-Aside from these two methods, the method `analyse_dataset` gives a basic version of TPOT to find the best machine learning pipeline for the dataset. In this method, exploration and preprocessing is also possible to be automated, making it possible to explore, preprocess and analyse with one method. Examples are made also provided in a separate folder to show how the basic methods of the framework should be used.
+The newly preprocessed dataset can be exported again as a preprocessed datset with the method `export_csv_dataset`. Aside from these three methods, the method `analyse_dataset` gives a basic version of TPOT to find the best machine learning pipeline for the dataset. In this method, exploration and preprocessing is also possible to be automated, making it possible to explore, preprocess and analyse with one method. Examples are made also provided in a separate folder to show how the basic methods of the framework should be used.
 
-### Example 1 (read_csv_dataset and explore_dataset)
+### Example 1 (read_csv_dataset, explore_dataset and export_csv_dataset)
 
 ```
 import cBioF
@@ -56,6 +63,9 @@ X, y, features = cBioF.read_csv_dataset('MicroOrganismsDataset.csv')
 # *plots* should be True if also additional plots of distributions should be shown.
 X_new, y_new, f_new, exploration_results = cBioF.explore_dataset(X, y, features, output_categorical=True,
                                                                  preprocessing=True, focus=False, plots=False)
+                                                                 
+# Export the newly preprocessed values of the dataset
+cBioF.export_csv_dataset(X_new, y_new, f_new, csv_path='HepatitisDatasetNew.csv')
 ```
 
 ### Example 2 (read_csv_dataset and analyse_dataset)
@@ -75,6 +85,8 @@ cBioF.analyse_dataset(X, y, features, file_name='TPOT_pipeline_MO', preprocessin
                       classification=True)
 ```
 
+## GUI
+The GUI makes use of the four cBioF methods made available: `read_csv_dataset`, `explore_dataset`, `analyse_dataset` and `export_csv_dataset`. For all of these important input variables can be changed by the user. Progress can be tracked by reading the terminal provided in the window. Two example screens are given in the user manual, for better clarification. 
 
 ## Builtin functions
 Aside from the exploration and preprocessing, several methods are also given separately. These methods are made when the user has a better idea how to approach the dataset and preprocess it. These methods are mainly created due to limitations in the *scikit-learn* package and alternatives usually can be found in there. The builtin functions are based on feature selection, missing value handling and basic preprocessing. All of them need numpy matrices or arrays as input, either from the data matrix, the output array or the feature array. Explaining every single method and parameter is done in the code. An explanation of a method `TARGET_METHOD` can be retrieved by putting the line `help(TARGET_METHOD)` in Python after importing it.
