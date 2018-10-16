@@ -100,7 +100,7 @@ Aside from the exploration and preprocessing, several methods are also given sep
 ### Feature selection
 Feature selection methods can be used when using the python line `import cBioF.feature_selection`. Feature selection algorithms can be divided into three categories: filter, wrapper and embedded methods. Of these three, filter methods and embedded methods are mostly provided by the package *scikit-learn*. Wrapper methods, however, are not and therefore are provided in this framework in the same stile as the other methods in *scikit-learn*.
 - Wrapper methods: Forward selection (`ForwardSelector`), backward selection (`BackwardSelector`), PTA (`PTA`) and floating selection (`FloatingSelector`)
-- Embedded methods: K-from-model selection (select K best instead of choosing a percentage, `SelectKFromModel`)
+- Embedded methods: K-from-model selection (select K best instead of choosing a model specific threshold, `SelectKFromModel`)
 
 ### Missing value handling
 Missing value handling methods can be used when using the python line `import cBioF.missing_value_handling`.Some missing value handling algorithms can be found in *scikit-learn*. These however, do have the condition of all features being numeric and are only basic imputation methods. Misisng value handling is the first step done for a dataset, as other methods usually require a complete dataset. Therefore missing value handling methods are given that also accept categorical data.
